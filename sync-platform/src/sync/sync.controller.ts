@@ -7,28 +7,13 @@ export class SyncController {
 
   @Post('run')
   async runFullSync() {
-    try {
+    const result = await this.syncService.runFullManualSync();
 
-      const productsResult = await this.syncService.syncProducts();
-
-      const ordersResult = await this.syncService.syncOrders();
-
-      return {
-        status: 'success',
-        message: 'Full sync completed',
-        timestamp: new Date().toISOString(),
-        products: productsResult,
-        orders: ordersResult,
-      };
-    } catch (error) {
-      console.error('Full sync failed:', error);
-
-      return {
-        status: 'error',
-        message: 'Sync failed',
-        error: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString(),
-      };
-    }
+    return {
+      status: 'success',
+      message: 'Full sync completed',
+      timestamp: new Date().toISOString(),
+      ...result,
+    };
   }
 }

@@ -51,7 +51,7 @@ model OrderItem {
   orderId   String
   productId String
   qty       Int
-  unitPrice Int // price per unit at order time
+  unitPrice Int 
 
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id])

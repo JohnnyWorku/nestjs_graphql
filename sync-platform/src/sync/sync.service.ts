@@ -1,11 +1,10 @@
-import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { FirebaseService } from '../firebase/firebase.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { OrderStatus } from '@prisma/client';
 
 @Injectable()
 export class SyncService implements OnModuleInit {
-  private readonly logger = new Logger(SyncService.name);
   private listenersRegistered = false;
 
   constructor(
@@ -15,10 +14,9 @@ export class SyncService implements OnModuleInit {
 
   
   async onModuleInit() {
-    const lookback = parseInt(process.env.SYNC_LOOKBACK_MINUTES || '5', 10);
+    const lookback = parseInt(process.env.SYNC_LOOKBACK_MINUTES, 10);
     const since = Date.now() - lookback * 60 * 1000;
 
-    this.logger.log(`Startup lookback sync: last ${lookback} minutes`);
     await this.syncProducts(since);
     await this.syncOrders(since);
 
@@ -39,8 +37,6 @@ export class SyncService implements OnModuleInit {
   private registerRealtimeListeners() {
     if (this.listenersRegistered) return;
     this.listenersRegistered = true;
-
-    this.logger.log('Registering Firebase realtime listeners');
 
     const productsRef = this.firebase.db.ref('products');
     const ordersRef = this.firebase.db.ref('orders');
@@ -96,8 +92,6 @@ export class SyncService implements OnModuleInit {
         updatedAt: p.updatedAt ? new Date(p.updatedAt) : new Date(),
       },
     });
-
-    this.logger.debug(`Product synced: ${id}`);
   }
 
   async syncOrders(since?: number) {
@@ -164,8 +158,6 @@ export class SyncService implements OnModuleInit {
         }
       }
     });
-
-    this.logger.debug(`Order synced: ${orderId}`);
   }
 
   private mapOrderStatus(status?: string): OrderStatus {
