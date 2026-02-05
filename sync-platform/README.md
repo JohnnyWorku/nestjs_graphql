@@ -184,7 +184,7 @@ Expected Firebase shapes:
 
 ### Example GraphQL query
 
-query {
+```query {
 products {
     id
     name
@@ -193,14 +193,16 @@ products {
     stock
   }
 }
+```
 
-query {
+```query {
   orders {
     id
     status
     total
   }
 }
+```
 ---
 
 ## Logs & Observability
@@ -209,5 +211,6 @@ query {
   - In **development**, you see `log`, `warn`, and `error`.
   - In **production**, only `warn` and `error` are logged.
 - Sync operations are structured to be easily wrapped with additional logging/metrics if needed (e.g. per‑sync counts, durations).
+
 
 
