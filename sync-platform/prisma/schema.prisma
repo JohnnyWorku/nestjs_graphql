@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // url = env("DATABASE_URL")
 }
 
 enum OrderStatus {
@@ -20,7 +20,7 @@ enum OrderStatus {
 }
 
 model Product {
-  id        String   @id 
+  id        String   @id
   name      String
   sku       String   @unique
   price     Int // price in cents
@@ -51,12 +51,12 @@ model OrderItem {
   orderId   String
   productId String
   qty       Int
-  unitPrice Int 
+  unitPrice Int
 
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id])
 
-  @@unique([orderId, productId]) 
+  @@unique([orderId, productId])
   @@index([productId])
   @@map("order_items")
 }
