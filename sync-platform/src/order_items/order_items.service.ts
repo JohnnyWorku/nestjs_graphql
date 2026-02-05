@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject } from '@nestjs/common'; // Added Inject
 import * as admin from 'firebase-admin';
 import { plainToInstance } from 'class-transformer';
 import { OrderItem } from './entities/order_item.entity';
@@ -8,7 +8,10 @@ import { UpdateOrderItemInput } from './dto/update-order_item.input';
 @Injectable()
 export class OrderItemsService {
   private readonly nodeName = 'order_items';
-  private db = admin.database();
+
+  constructor(
+    @Inject('FIREBASE_DB') private readonly db: admin.database.Database,
+  ) {}
 
   async create(createOrderItemInput: CreateOrderItemInput): Promise<OrderItem> {
     const itemsRef = this.db.ref(this.nodeName).push();

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { plainToInstance } from 'class-transformer';
 import { Product } from './entities/product.entity';
@@ -8,7 +8,19 @@ import { UpdateProductInput } from './dto/update-product.input';
 @Injectable()
 export class ProductsService {
   private readonly collectionName = 'products';
-  private db = admin.database();
+
+  constructor(
+    @Inject('FIREBASE_DB') private readonly db: admin.database.Database,
+  ) {}
+
+  // Helper to ensure Dates are actual Date objects for GraphQL
+  private mapToProduct(data: any): Product {
+    return plainToInstance(Product, {
+      ...data,
+      createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
+      updatedAt: data.updatedAt ? new Date(data.updatedAt) : new Date(),
+    });
+  }
 
   async create(createProductInput: CreateProductInput): Promise<Product> {
     const productsRef = this.db.ref(this.collectionName);
@@ -24,8 +36,8 @@ export class ProductsService {
 
     await newProductRef.set(fullProductData);
     
-    // plainToInstance converts the ISO strings into real Date objects for TypeScript
-    return plainToInstance(Product, fullProductData);
+    // Use the helper to return proper Date objects
+    return this.mapToProduct(fullProductData);
   }
 
   async findAll(): Promise<Product[]> {
@@ -33,12 +45,10 @@ export class ProductsService {
     const data = snapshot.val();
     if (!data) return [];
     
-    const list = Object.keys(data).map((key) => ({ 
-      ...data[key],
-      id: key 
-    }));
-
-    return plainToInstance(Product, list);
+    return Object.keys(data).map((key) => {
+      const item = data[key];
+      return this.mapToProduct({ ...item, id: key });
+    });
   }
 
   async findOne(id: string): Promise<Product> {
@@ -46,7 +56,7 @@ export class ProductsService {
     if (!snapshot.exists()) {
        throw new NotFoundException(`Product with ID ${id} not found`);
     }
-    return plainToInstance(Product, { id, ...snapshot.val() });
+    return this.mapToProduct({ id, ...snapshot.val() });
   }
 
   async update(id: string, updateProductInput: UpdateProductInput): Promise<Product> {
@@ -57,7 +67,6 @@ export class ProductsService {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
 
-    // Destructure to ensure we don't accidentally update the 'id' field
     const { id: _, ...dataToUpdate } = updateProductInput;
 
     const updateData = {
@@ -68,13 +77,15 @@ export class ProductsService {
     await ref.update(updateData);
     const updatedResult = { ...snapshot.val(), ...updateData, id };
 
-    return plainToInstance(Product, updatedResult);
+    return this.mapToProduct(updatedResult);
   }
 
   async remove(id: string): Promise<boolean> {
     const ref = this.db.ref(`${this.collectionName}/${id}`);
     const snapshot = await ref.once('value');
-    if (!snapshot.exists()) throw new NotFoundException();
+    if (!snapshot.exists()) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
 
     await ref.remove();
     return true;

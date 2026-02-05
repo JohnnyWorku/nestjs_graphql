@@ -3,20 +3,31 @@
 # ------------------------------------------------------
 
 type Product {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  name: String!
+  price: Int!
+  sku: String!
+  stock: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Order {
-  id: Float!
-  createdAt: String!
-  productId: String!
-  qty: Int!
-  unitPrice: Int!
+  id: ID!
+  status: String!
+  total: Int!
+  userId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type OrderItem {
-  id: Int!
+  id: ID!
   orderId: String!
   productId: String!
   qty: Int!
@@ -25,54 +36,66 @@ type OrderItem {
 
 type Query {
   products: [Product!]!
-  product(id: Int!): Product!
+  product(id: ID!): Product
   orders: [Order!]!
-  order(id: Int!): Order!
+  order(id: ID!): Order!
   orderItems: [OrderItem!]!
-  orderItem(id: Int!): OrderItem!
+  orderItem(id: ID!): OrderItem!
 }
 
 type Mutation {
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
-  removeProduct(id: Int!): Product!
+  removeProduct(id: ID!): Boolean!
   createOrder(createOrderInput: CreateOrderInput!): Order!
   updateOrder(updateOrderInput: UpdateOrderInput!): Order!
-  removeOrder(id: Int!): Order!
+  removeOrder(id: ID!): Boolean!
   createOrderItem(createOrderItemInput: CreateOrderItemInput!): OrderItem!
   updateOrderItem(updateOrderItemInput: UpdateOrderItemInput!): OrderItem!
-  removeOrderItem(id: Int!): OrderItem!
+  removeOrderItem(id: ID!): Boolean!
 }
 
 input CreateProductInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: String!
+  name: String!
+  price: Int!
+  sku: String!
+  stock: Int!
 }
 
 input UpdateProductInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  id: ID!
+  name: String
+  price: Int
+  sku: String
+  stock: Int
 }
 
 input CreateOrderInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: String!
+  status: String!
+  total: Int!
+  userId: String!
 }
 
 input UpdateOrderInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  id: ID!
+  status: String
+  total: Int
+  userId: String
 }
 
 input CreateOrderItemInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  orderId: String!
+  productId: String!
+  qty: Int!
+  unitPrice: Int!
 }
 
 input UpdateOrderItemInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  orderId: String
+  productId: String
+  qty: Int
+  unitPrice: Int
+  id: ID!
 }

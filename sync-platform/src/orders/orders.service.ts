@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject } from '@nestjs/common'; // Added Inject
 import * as admin from 'firebase-admin';
 import { plainToInstance } from 'class-transformer';
 import { Order } from './entities/order.entity';
@@ -8,7 +8,11 @@ import { UpdateOrderInput } from './dto/update-order.input';
 @Injectable()
 export class OrdersService {
   private readonly nodeName = 'orders';
-  private db = admin.database();
+
+  constructor(
+    // Injecting the DB token forces NestJS to wait for Firebase initialization
+    @Inject('FIREBASE_DB') private readonly db: admin.database.Database,
+  ) {}
 
   async create(createOrderInput: CreateOrderInput): Promise<Order> {
     const orderRef = this.db.ref(this.nodeName).push();

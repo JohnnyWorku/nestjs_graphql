@@ -5,34 +5,26 @@ import { join } from 'path';
 
 @Injectable()
 export class FirebaseService implements OnModuleInit {
-  private dbInstance: admin.database.Database | null = null;
+  private dbInstance: admin.database.Database;
 
   constructor(private configService: ConfigService) {}
 
   async onModuleInit(): Promise<void> {
 
-    const keyPath = this.configService.get<string>('FIREBASE_KEY_PATH');
-    const databaseURL = this.configService.get<string>('FIREBASE_DATABASE_URL');
-
-    if (!keyPath) {
-      throw new Error('FIREBASE_KEY_PATH is required');
-    }
-
-    if (!databaseURL) {
-      throw new Error('FIREBASE_DATABASE_URL is required');
-    }
+    const FIREBASE_KEY_PATH = this.configService.get<string>('FIREBASE_KEY_PATH');
+    const FIREBASE_DATABASE_URL = this.configService.get<string>('FIREBASE_DATABASE_URL');
 
     if (admin.apps.length > 0) {
       this.dbInstance = admin.database();
       return;
     }
 
-    const fullKeyPath = join(process.cwd(), keyPath);
+    const fullKeyPath = join(process.cwd(), FIREBASE_KEY_PATH);
 
     try {
       admin.initializeApp({
         credential: admin.credential.cert(fullKeyPath),
-        databaseURL,
+        databaseURL: FIREBASE_DATABASE_URL,
       });
 
       this.dbInstance = admin.database();

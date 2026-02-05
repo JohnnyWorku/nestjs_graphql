@@ -6,6 +6,11 @@ export class CreateProductInput {
   @IsNotEmpty()
   @IsString()
   @Field()
+  id: string
+  
+  @IsNotEmpty()
+  @IsString()
+  @Field()
   name: string;
 
   @IsNotEmpty()
