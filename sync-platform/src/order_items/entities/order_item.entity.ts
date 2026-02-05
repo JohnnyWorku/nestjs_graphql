@@ -8,11 +8,11 @@ export class OrderItem {
   id: string;
 
   @Column()
-  @Field()
+  @Field((type) => ID)
   orderId: string;
 
   @Column()
-  @Field()
+  @Field((type) => ID)
   productId: string;
 
   @Column()

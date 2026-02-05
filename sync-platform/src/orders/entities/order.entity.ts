@@ -1,6 +1,7 @@
 import { ObjectType, Field, ID, Float, Int } from '@nestjs/graphql';
-import { Column, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
 
+@Entity()
 @ObjectType()
 export class Order {
     @Column()
