@@ -1,48 +1,19 @@
-import { InputType, Int, Field, ID } from '@nestjs/graphql';
-import { Column, Timestamp } from 'typeorm';
-import { IsEnum, IsString, IsNotEmpty, IsISO8601, IsNumber } from 'class-validator';
+import { InputType, Int, Field } from '@nestjs/graphql';
+import { IsEnum, IsString, IsNotEmpty, IsNumber } from 'class-validator';
 
 @InputType()
 export class CreateOrderInput {
-  @IsString()
-  @IsNotEmpty()
   @Field()
-  id: string;
-  
-  @IsNotEmpty()
-  @IsISO8601()
-  @Field((type) => Timestamp)
-  createdAt: Timestamp;
-
-  @Field()
-  @IsEnum(['PENDING', 'CONFIRMED', 'CANCELED'], {
-    message: 'valid status required.',
-  })
-  status: 'PENDING' | 'CONFIRMED' | 'CANCELED';
+  @IsEnum(['PENDING', 'CONFIRMED', 'CANCELED'], { message: 'valid status required.' })
+  status: string;
 
   @IsNumber()
   @IsNotEmpty()
-  @Field((type) => Int)
+  @Field(() => Int)
   total: number;
-
-  @IsNotEmpty()
-  @IsISO8601()
-  @Field((type) => Timestamp)
-  updatedAt: Timestamp;
 
   @IsString()
   @IsNotEmpty()
   @Field()
   userId: string;
-  // @IsString()
-  // @IsNotEmpty()
-  // name: string;
-
-  // @IsEmail()
-  // email: string;
-
-  // @IsEnum(['INTERN', 'ENGINEER', 'ADMIN'], {
-  //   message: 'valid role required.',
-  // })
-  // role: 'INTERN' | 'ENGINEER' | 'ADMIN';
 }

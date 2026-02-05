@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { OrderItemsService } from './order_items.service';
 import { OrderItem } from './entities/order_item.entity';
 import { CreateOrderItemInput } from './dto/create-order_item.input';
@@ -9,27 +9,27 @@ export class OrderItemsResolver {
   constructor(private readonly orderItemsService: OrderItemsService) {}
 
   @Mutation(() => OrderItem)
-  createOrderItem(@Args('createOrderItemInput') createOrderItemInput: CreateOrderItemInput) {
-    return this.orderItemsService.create(createOrderItemInput);
+  async createOrderItem(@Args('createOrderItemInput') createOrderItemInput: CreateOrderItemInput) {
+    return await this.orderItemsService.create(createOrderItemInput);
   }
 
   @Query(() => [OrderItem], { name: 'orderItems' })
-  findAll() {
-    return this.orderItemsService.findAll();
+  async findAll() {
+    return await this.orderItemsService.findAll();
   }
 
   @Query(() => OrderItem, { name: 'orderItem' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.orderItemsService.findOne(id);
+  async findOne(@Args('id', { type: () => ID }) id: string) {
+    return await this.orderItemsService.findOne(id);
   }
 
   @Mutation(() => OrderItem)
-  updateOrderItem(@Args('updateOrderItemInput') updateOrderItemInput: UpdateOrderItemInput) {
-    return this.orderItemsService.update(updateOrderItemInput.id, updateOrderItemInput);
+  async updateOrderItem(@Args('updateOrderItemInput') updateOrderItemInput: UpdateOrderItemInput) {
+    return await this.orderItemsService.update(updateOrderItemInput.id, updateOrderItemInput);
   }
 
-  @Mutation(() => OrderItem)
-  removeOrderItem(@Args('id', { type: () => Int }) id: number) {
-    return this.orderItemsService.remove(id);
+  @Mutation(() => Boolean) // Standard practice to return boolean on removal
+  async removeOrderItem(@Args('id', { type: () => ID }) id: string) {
+    return await this.orderItemsService.remove(id);
   }
 }

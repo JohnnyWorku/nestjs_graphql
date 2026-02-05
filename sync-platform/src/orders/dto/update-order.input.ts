@@ -1,5 +1,8 @@
 import { CreateOrderInput } from './create-order.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { InputType, Field, Int, PartialType, ID } from '@nestjs/graphql';
 
 @InputType()
-export class UpdateOrderInput extends PartialType(CreateOrderInput) {}
+export class UpdateOrderInput extends PartialType(CreateOrderInput) {
+  @Field(() => ID)
+  id: string;
+}

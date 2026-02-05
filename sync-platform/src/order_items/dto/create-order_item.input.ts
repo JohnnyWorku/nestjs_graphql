@@ -6,11 +6,6 @@ export class CreateOrderItemInput {
   @IsString()
   @IsNotEmpty()
   @Field()
-  id: string;
-  
-  @IsString()
-  @IsNotEmpty()
-  @Field()
   orderId: string;
 
   @IsString()
@@ -20,11 +15,11 @@ export class CreateOrderItemInput {
 
   @IsNotEmpty()
   @IsNumber()
-  @Field((type) => Int)
+  @Field(() => Int)
   qty: number;
 
   @IsNotEmpty()
   @IsNumber()
-  @Field((type) => Int)
+  @Field(() => Int)
   unitPrice: number;
 }

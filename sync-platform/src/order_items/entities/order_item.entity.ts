@@ -1,10 +1,11 @@
-import { ObjectType, Field, Int, ID, Float } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
 export class OrderItem {
-  @Field()
+  @PrimaryColumn()
+  @Field(() => ID)
   id: string;
 
   @Column()
@@ -16,14 +17,10 @@ export class OrderItem {
   productId: string;
 
   @Column()
-  @Field((type) => Int)
+  @Field(() => Int)
   qty: number;
 
   @Column()
-  @Field((type) => Int)
+  @Field(() => Int)
   unitPrice: number;
-
-  // @ManyToOne(() => Owner, (owner) => owner.pets)
-  // @Field((type) => Owner)
-  // owner: Owner;
 }
