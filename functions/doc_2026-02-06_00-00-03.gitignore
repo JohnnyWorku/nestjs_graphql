@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets 
+.env
+.env.local
+.env.*.local
+permisions.json
+*.pem
+
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+firestore-debug.log
+ui-debug.log
+*.log
+
+# ESLint
+.eslintcache
+
+coverage/
+.nyc_output/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE 
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
