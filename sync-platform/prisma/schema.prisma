@@ -10,7 +10,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // url = env("DATABASE_URL")
 }
 
 enum OrderStatus {
@@ -23,7 +22,7 @@ model Product {
   id        String   @id
   name      String
   sku       String   @unique
-  price     Int // price in cents
+  price     Int
   stock     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -37,7 +36,7 @@ model Order {
   id        String      @id
   userId    String
   status    OrderStatus @default(PENDING)
-  total     Int // total price in cents
+  total     Int
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 
