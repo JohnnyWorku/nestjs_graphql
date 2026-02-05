@@ -17,21 +17,23 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Order {
-  id: ID!
-  status: String!
-  total: Int!
-  userId: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
 type OrderItem {
   id: ID!
   orderId: String!
   productId: String!
+  product: Product!
   qty: Int!
   unitPrice: Int!
+}
+
+type Order {
+  id: ID!
+  status: String!
+  items: [OrderItem!]!
+  total: Int!
+  userId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Query {

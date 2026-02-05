@@ -23,20 +23,23 @@ export class ProductsService {
   }
 
   async create(createProductInput: CreateProductInput): Promise<Product> {
-    const productsRef = this.db.ref(this.collectionName);
-    const newProductRef = productsRef.push();
-    const newId = newProductRef.key;
+    // Pick the ID you sent from the frontend
+    const id = createProductInput.id; 
 
+    // Point to a folder with that EXACT name
+    const productRef = this.db.ref(this.collectionName).child(id);
+
+    // Prepare the data
     const fullProductData = {
       ...createProductInput,
-      id: newId,
+      id: id,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
-    await newProductRef.set(fullProductData);
+    // Save it
+    await productRef.set(fullProductData);
     
-    // Use the helper to return proper Date objects
     return this.mapToProduct(fullProductData);
   }
 

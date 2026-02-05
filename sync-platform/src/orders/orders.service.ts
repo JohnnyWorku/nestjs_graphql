@@ -15,17 +15,24 @@ export class OrdersService {
   ) {}
 
   async create(createOrderInput: CreateOrderInput): Promise<Order> {
-    const orderRef = this.db.ref(this.nodeName).push();
-    const id = orderRef.key;
+    // Get the custom ID you provided in the mutation
+    const id = createOrderInput.id;
 
+    // Tell Firebase: "I want to save inside a folder named exactly this ID"
+    const orderRef = this.db.ref(this.nodeName).child(id);
+
+    // Prepare the full data object
     const fullData = {
       ...createOrderInput,
-      id,
+      id: id, 
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
+    // Save it to the database
     await orderRef.set(fullData);
+
+    // Return the clean object
     return plainToInstance(Order, fullData);
   }
 

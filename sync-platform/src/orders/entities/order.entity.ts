@@ -1,4 +1,5 @@
 import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
+import { OrderItem } from 'order_items/entities/order_item.entity';
 import { Column, Entity, PrimaryColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
@@ -11,6 +12,9 @@ export class Order {
   @Column()
   @Field()
   status: string;
+
+  @Field(() => [OrderItem])
+  items: OrderItem[];
 
   @Column()
   @Field(() => Int)
