@@ -184,32 +184,23 @@ Expected Firebase shapes:
 
 ### Example GraphQL query
 
-query OrdersAndProducts {
-  products(search: "coffee") {
+query {
+products {
     id
     name
     sku
     price
     stock
   }
-
-  orders(userId: "firebaseUid", status: CONFIRMED) {
-    id
-    total
-    status
-    createdAt
-    items {
-      qty
-      unitPrice
-      product {
-        id
-        name
-        sku
-      }
-    }
-  }
 }
 
+query {
+  orders {
+    id
+    status
+    total
+  }
+}
 ---
 
 ## Logs & Observability
@@ -218,4 +209,5 @@ query OrdersAndProducts {
   - In **development**, you see `log`, `warn`, and `error`.
   - In **production**, only `warn` and `error` are logged.
 - Sync operations are structured to be easily wrapped with additional logging/metrics if needed (e.g. per‑sync counts, durations).
+
 
