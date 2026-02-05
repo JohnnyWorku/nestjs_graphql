@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { ProductsService } from './products.service';
 import { Product } from './entities/product.entity';
 import { CreateProductInput } from './dto/create-product.input';
@@ -9,27 +9,27 @@ export class ProductsResolver {
   constructor(private readonly productsService: ProductsService) {}
 
   @Mutation(() => Product)
-  createProduct(@Args('createProductInput') createProductInput: CreateProductInput) {
-    return this.productsService.create(createProductInput);
+  async createProduct(@Args('createProductInput') createProductInput: CreateProductInput): Promise<Product> {
+    return await this.productsService.create(createProductInput);
   }
 
   @Query(() => [Product], { name: 'products' })
-  findAll() {
-    return this.productsService.findAll();
+  async findAll(): Promise<Product[]> {
+    return await this.productsService.findAll();
   }
 
-  @Query(() => Product, { name: 'product' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.productsService.findOne(id);
-  }
-
-  @Mutation(() => Product)
-  updateProduct(@Args('updateProductInput') updateProductInput: UpdateProductInput) {
-    return this.productsService.update(updateProductInput.id, updateProductInput);
+  @Query(() => Product, { name: 'product', nullable: true })
+  async findOne(@Args('id', { type: () => ID }) id: string): Promise<Product> {
+    return await this.productsService.findOne(id);
   }
 
   @Mutation(() => Product)
-  removeProduct(@Args('id', { type: () => Int }) id: number) {
-    return this.productsService.remove(id);
+  async updateProduct(@Args('updateProductInput') updateProductInput: UpdateProductInput): Promise<Product> {
+    return await this.productsService.update(updateProductInput.id, updateProductInput);
+  }
+
+  @Mutation(() => Boolean)
+  async removeProduct(@Args('id', { type: () => ID }) id: string): Promise<boolean> {
+    return await this.productsService.remove(id);
   }
 }

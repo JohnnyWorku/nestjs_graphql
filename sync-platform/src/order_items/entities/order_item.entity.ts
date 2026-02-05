@@ -4,15 +4,15 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 @ObjectType()
 export class OrderItem {
-  @Field((type) => ID)
+  @Field()
   id: string;
 
   @Column()
-  @Field((type) => ID)
+  @Field()
   orderId: string;
 
   @Column()
-  @Field((type) => ID)
+  @Field()
   productId: string;
 
   @Column()

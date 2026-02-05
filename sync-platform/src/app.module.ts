@@ -22,6 +22,7 @@ import { OrderItemsModule } from './order_items/order_items.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      playground: true,
     }),
 
     TypeOrmModule.forRoot({

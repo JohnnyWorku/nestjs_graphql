@@ -1,22 +1,19 @@
-import { ObjectType, Field, ID, Float, Int } from '@nestjs/graphql';
-import { Column, Entity, Timestamp } from 'typeorm';
+import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
+import { Column, Entity, PrimaryColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
 export class Product {
-  @Field((type) => ID)
+  @PrimaryColumn()
+  @Field(() => ID)
   id: string;
-  
-  @Column()
-  @Field((type) => Timestamp)
-  createdAt: Timestamp;
 
   @Column()
   @Field()
   name: string;
 
   @Column()
-  @Field((type) => Int)
+  @Field(() => Int)
   price: number;
 
   @Column()
@@ -24,14 +21,14 @@ export class Product {
   sku: string;
 
   @Column()
-  @Field((type) => Int)
+  @Field(() => Int)
   stock: number;
 
-  @Column()
-  @Field((type) => Timestamp)
-  updatedAt: Timestamp;
-  
-    // @ManyToOne(() => Owner, (owner) => owner.pets)
-    // @Field((type) => Owner)
-    // owner: Owner;
+  @CreateDateColumn({ type: 'timestamp' })
+  @Field()
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  @Field()
+  updatedAt: Date;
 }

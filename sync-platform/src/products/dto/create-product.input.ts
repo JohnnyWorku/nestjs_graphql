@@ -1,19 +1,8 @@
-import { InputType, Int, Field, ID } from '@nestjs/graphql';
-import { IsISO8601, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Timestamp } from 'typeorm';
+import { InputType, Field, Int } from '@nestjs/graphql';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 @InputType()
 export class CreateProductInput {
-  @IsNotEmpty()
-  @IsString()
-  @Field((type) => ID)
-  id: string;
-  
-  @IsNotEmpty()
-  @IsISO8601()
-  @Field((type) => Timestamp)
-  createdAt: Timestamp;
-
   @IsNotEmpty()
   @IsString()
   @Field()
@@ -21,7 +10,7 @@ export class CreateProductInput {
 
   @IsNotEmpty()
   @IsNumber()
-  @Field((type) => Int)
+  @Field(() => Int)
   price: number;
 
   @IsString()
@@ -31,11 +20,6 @@ export class CreateProductInput {
 
   @IsNotEmpty()
   @IsNumber()
-  @Field((type) => Int)
+  @Field(() => Int)
   stock: number;
-
-  @IsNotEmpty()
-  @IsISO8601()
-  @Field((type) => Timestamp)
-  updatedAt: Timestamp;
 }

@@ -5,7 +5,7 @@ import { Column, Entity, PrimaryGeneratedColumn, Timestamp } from 'typeorm';
 @ObjectType()
 export class Order {
     @Column()
-    @Field((type) => ID)
+    @Field()
     id: string;
     
     @Column()

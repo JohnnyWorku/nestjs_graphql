@@ -5,17 +5,17 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class CreateOrderItemInput {
   @IsString()
   @IsNotEmpty()
-  @Field((type) => ID)
+  @Field()
   id: string;
   
   @IsString()
   @IsNotEmpty()
-  @Field((type) => ID)
+  @Field()
   orderId: string;
 
   @IsString()
   @IsNotEmpty()
-  @Field((type) => ID)
+  @Field()
   productId: string;
 
   @IsNotEmpty()

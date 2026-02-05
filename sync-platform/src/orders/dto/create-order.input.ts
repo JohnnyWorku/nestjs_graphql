@@ -6,7 +6,7 @@ import { IsEnum, IsString, IsNotEmpty, IsISO8601, IsNumber } from 'class-validat
 export class CreateOrderInput {
   @IsString()
   @IsNotEmpty()
-  @Field((type) => ID)
+  @Field()
   id: string;
   
   @IsNotEmpty()
