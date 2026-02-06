@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 import { Product } from 'products/entities/product.entity';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -17,9 +17,6 @@ export class OrderItem {
   @Field()
   productId: string;
 
-  @Field(() => Product) // This is your @ManyToOne equivalent!
-  product: Product;
-
   @Column()
   @Field(() => Int)
   qty: number;
@@ -27,4 +24,7 @@ export class OrderItem {
   @Column()
   @Field(() => Int)
   unitPrice: number;
+
+  @Field(() => Product, { nullable: true })
+  product?: Product;
 }

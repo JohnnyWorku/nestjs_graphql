@@ -3,10 +3,12 @@ import { OrdersService } from './orders.service';
 import { Order } from './entities/order.entity';
 import { CreateOrderInput } from './dto/create-order.input';
 import { UpdateOrderInput } from './dto/update-order.input';
+import { PrismaService } from 'prisma/prisma.service';
+import { OrderItem } from 'order_items/entities/order_item.entity';
 
 @Resolver(() => Order)
 export class OrdersResolver {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(private readonly ordersService: OrdersService, private prisma: PrismaService) {}
 
   @Mutation(() => Order)
   async createOrder(@Args('createOrderInput') createOrderInput: CreateOrderInput) {
@@ -15,7 +17,7 @@ export class OrdersResolver {
 
   @Query(() => [Order], { name: 'orders' })
   async findAll() {
-    return await this.ordersService.findAll();
+    return this.prisma.order.findMany();
   }
 
   @Query(() => Order, { name: 'order' })
@@ -31,5 +33,12 @@ export class OrdersResolver {
   @Mutation(() => Boolean)
   async removeOrder(@Args('id', { type: () => ID }) id: string) {
     return await this.ordersService.remove(id);
+  }
+
+  @ResolveField(() => [OrderItem])
+  async items(@Parent() order: Order) {
+    return this.prisma.orderItem.findMany({
+      where: { orderId: order.id },
+    });
   }
 }

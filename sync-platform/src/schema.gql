@@ -21,9 +21,9 @@ type OrderItem {
   id: ID!
   orderId: String!
   productId: String!
-  product: Product!
   qty: Int!
   unitPrice: Int!
+  product: Product
 }
 
 type Order {
