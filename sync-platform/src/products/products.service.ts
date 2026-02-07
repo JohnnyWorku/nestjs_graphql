@@ -43,15 +43,27 @@ export class ProductsService {
     return this.mapToProduct(fullProductData);
   }
 
-  async findAll(): Promise<Product[]> {
+  async findAll(search?: string): Promise<Product[]> {
     const snapshot = await this.db.ref(this.collectionName).once('value');
     const data = snapshot.val();
     if (!data) return [];
     
-    return Object.keys(data).map((key) => {
+    const allProducts = Object.keys(data).map((key) => {
       const item = data[key];
       return this.mapToProduct({ ...item, id: key });
     });
+
+    if (search) {
+      const filtered = allProducts.filter((product) => product.name === search);
+
+      if (filtered.length === 0) {
+        throw new NotFoundException(`No products found with name: ${search}`)
+      }
+
+      return filtered;
+    }
+
+    return allProducts;
   }
 
   async findOne(id: string): Promise<Product> {

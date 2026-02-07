@@ -14,8 +14,8 @@ export class ProductsResolver {
   }
 
   @Query(() => [Product], { name: 'products' })
-  async findAll(): Promise<Product[]> {
-    return await this.productsService.findAll();
+  async findAll(@Args('search', { type: () => String, nullable: true }) search?: string): Promise<Product[]> {
+    return await this.productsService.findAll(search);
   }
 
   @Query(() => Product, { name: 'product', nullable: true })

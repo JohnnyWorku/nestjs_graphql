@@ -37,12 +37,18 @@ type Order {
 }
 
 type Query {
-  products: [Product!]!
+  products(search: String): [Product!]!
   product(id: ID!): Product
-  orders: [Order!]!
+  orders(userId: String!, status: OrderStatus!): [Order!]!
   order(id: ID!): Order!
   orderItems: [OrderItem!]!
   orderItem(id: ID!): OrderItem!
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
 }
 
 type Mutation {

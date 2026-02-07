@@ -4,6 +4,7 @@ import { plainToInstance } from 'class-transformer';
 import { Order } from './entities/order.entity';
 import { CreateOrderInput } from './dto/create-order.input';
 import { UpdateOrderInput } from './dto/update-order.input';
+import { OrderStatus } from './orders.resolver';
 
 @Injectable()
 export class OrdersService {
@@ -36,12 +37,20 @@ export class OrdersService {
     return plainToInstance(Order, fullData);
   }
 
-  async findAll(): Promise<Order[]> {
+  async findAll(userId: string, status: OrderStatus): Promise<Order[]> {
     const snapshot = await this.db.ref(this.nodeName).once('value');
     const data = snapshot.val();
+
     if (!data) return [];
 
-    const list = Object.keys(data).map(key => ({ ...data[key], id: key }));
+    const list = Object.keys(data)
+      .map(key => ({ ...data[key], id: key }))
+      .filter((order) => order.userId === userId && order.status === status);
+
+    if (list.length === 0) {
+      throw new NotFoundException(`No orders found for User: ${userId} with Status: ${status}`);
+    }
+
     return plainToInstance(Order, list);
   }
 

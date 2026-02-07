@@ -1,10 +1,20 @@
-import { Resolver, Query, Mutation, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID, ResolveField, Parent, registerEnumType } from '@nestjs/graphql';
 import { OrdersService } from './orders.service';
 import { Order } from './entities/order.entity';
 import { CreateOrderInput } from './dto/create-order.input';
 import { UpdateOrderInput } from './dto/update-order.input';
 import { PrismaService } from 'prisma/prisma.service';
 import { OrderItem } from 'order_items/entities/order_item.entity';
+
+
+export enum OrderStatus {
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+// registering the enum to graphql
+registerEnumType(OrderStatus, { name: 'OrderStatus' });
 
 @Resolver(() => Order)
 export class OrdersResolver {
@@ -16,8 +26,11 @@ export class OrdersResolver {
   }
 
   @Query(() => [Order], { name: 'orders' })
-  async findAll() {
-    return this.prisma.order.findMany();
+  async findAll(
+    @Args('userId', { type: () => String}) userId: string,
+    @Args('status', { type: () => OrderStatus}) status: OrderStatus,
+  ): Promise<Order[]> {
+    return await this.ordersService.findAll(userId, status);
   }
 
   @Query(() => Order, { name: 'order' })
