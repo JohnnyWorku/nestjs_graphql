@@ -225,13 +225,41 @@ query {
   }
 }
 ```
-
 ```
 query {
-  orders {
+  products(search: "Pine apple") {
+    id,
+    name,
+    price
+  }
+}
+```
+```
+query {
+  orders(userId: "u_001", status: PENDING) {
     id
     status
-    total
+    items {
+      qty
+      unitPrice
+      product {
+        name
+        sku
+        stock
+      }
+    }
+  }
+}
+```
+```
+query {
+  order(id: "o_001") {
+    id
+    status
+    items {
+      productId
+      qty
+    }
   }
 }
 ```
@@ -243,6 +271,7 @@ query {
   - In **development**, you see `log`, `warn`, and `error`.
   - In **production**, only `warn` and `error` are logged.
 - Sync operations are structured to be easily wrapped with additional logging/metrics if needed (e.g. per‑sync counts, durations).
+
 
 
 
